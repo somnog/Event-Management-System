@@ -4,6 +4,9 @@ build
 coverage
 .env
 .env.*
+# ...but the shared templates are committed on purpose (Group 8 owns them).
+!.env.example
+!.env.*.example
 .DS_Store
 /dist
 /tmp
