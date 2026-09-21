@@ -45,13 +45,14 @@ describe('FixtureReportsDataSource', () => {
   });
 
   describe('passFail', () => {
-    it('derives totals and pass rate from the summary', async () => {
+    it('returns the pass/fail breakdown and nothing else', async () => {
       const report = await source.passFail('WS-2025-001', admin);
 
-      expect(report.total_assessed).toBe(32);
-      expect(report.total_passed).toBe(24);
-      expect(report.total_failed).toBe(8);
-      expect(report.pass_rate).toBe(0.75);
+      expect(report).toEqual({
+        workshop_id: 'WS-2025-001',
+        total_passed: 24,
+        total_failed: 8,
+      });
     });
   });
 

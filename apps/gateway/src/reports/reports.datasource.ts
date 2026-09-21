@@ -36,11 +36,8 @@ export interface WorkshopSummary {
 
 export interface PassFailReport {
   workshop_id: string;
-  title: string;
-  total_assessed: number;
   total_passed: number;
   total_failed: number;
-  pass_rate: number;
 }
 
 export interface AttendanceReport {

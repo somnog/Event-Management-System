@@ -69,15 +69,11 @@ export class FixtureReportsDataSource implements ReportsDataSource {
     _caller: CallerContext,
   ): Promise<PassFailReport> {
     const workshop = this.require(workshopId);
-    const assessed = workshop.total_passed + workshop.total_failed;
 
     return {
       workshop_id: workshop.workshop_id,
-      title: workshop.title,
-      total_assessed: assessed,
       total_passed: workshop.total_passed,
       total_failed: workshop.total_failed,
-      pass_rate: assessed === 0 ? 0 : round(workshop.total_passed / assessed),
     };
   }
 
