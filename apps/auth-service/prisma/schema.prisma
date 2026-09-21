@@ -14,10 +14,9 @@ datasource db {
 
 
 enum UserRole {
-  ADMIN
-  ORGANIZER
-  SPEAKER
-  ATTENDEE
+  admin
+  facilitator
+  participant
 }
 
 enum VerificationTokenType {
@@ -34,7 +33,7 @@ model User {
   affiliation   String?
   country       String?
   phone         String?
-  role          UserRole  @default(ATTENDEE)
+  role          UserRole  @default(participant)
   emailVerified Boolean   @default(false)
   isActive      Boolean   @default(true)
   lastLoginAt   DateTime?

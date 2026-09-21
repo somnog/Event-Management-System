@@ -57,7 +57,7 @@ const activeUser = {
   affiliation: 'Somnog',
   country: 'SO',
   phone: '+252600000000',
-  role: 'ATTENDEE',
+  role: 'participant',
   isActive: true,
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
 };

@@ -75,7 +75,7 @@ export class AuthController {
 // Returns every user, so it is admin-only.
 @Get()
 @UseGuards(AccessTokenGuard, RolesGuard)
-@Roles('ADMIN')
+@Roles('admin')
 findAll() {
     return this.client
       .send('auth.find_all', {})

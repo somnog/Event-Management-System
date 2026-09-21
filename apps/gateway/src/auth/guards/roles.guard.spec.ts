@@ -14,11 +14,11 @@ describe('RolesGuard', () => {
 
   it('allows a user with a required role', () => {
     const reflector = {
-      getAllAndOverride: jest.fn().mockReturnValue(['ADMIN', 'ORGANIZER']),
+      getAllAndOverride: jest.fn().mockReturnValue(['admin', 'facilitator']),
     } as unknown as Reflector;
     const guard = new RolesGuard(reflector);
 
-    expect(guard.canActivate(context('ORGANIZER'))).toBe(true);
+    expect(guard.canActivate(context('facilitator'))).toBe(true);
     expect(reflector.getAllAndOverride).toHaveBeenCalledWith(
       ROLES_KEY,
       ['handler', 'class'],
@@ -27,11 +27,11 @@ describe('RolesGuard', () => {
 
   it('rejects a user without a required role', () => {
     const reflector = {
-      getAllAndOverride: jest.fn().mockReturnValue(['ADMIN']),
+      getAllAndOverride: jest.fn().mockReturnValue(['admin']),
     } as unknown as Reflector;
     const guard = new RolesGuard(reflector);
 
-    expect(() => guard.canActivate(context('ATTENDEE'))).toThrow(
+    expect(() => guard.canActivate(context('participant'))).toThrow(
       new ForbiddenException('Insufficient role'),
     );
   });

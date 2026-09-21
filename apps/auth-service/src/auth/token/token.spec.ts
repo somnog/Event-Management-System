@@ -10,7 +10,7 @@ const sha256 = (value: string) =>
 describe('TokenService', () => {
   let service: TokenService;
 
-  const user = { id: 'user-1', email: 'ada@example.com', role: 'ATTENDEE' };
+  const user = { id: 'user-1', email: 'ada@example.com', role: 'participant' };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

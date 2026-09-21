@@ -12,7 +12,7 @@ export class EventController {
   constructor(@Inject('EVENT_SERVICE') private readonly client: ClientProxy) {}
 
   @Post()
-  @Roles('ADMIN', 'ORGANIZER')
+  @Roles('admin', 'facilitator')
   @UseGuards(AccessTokenGuard, RolesGuard)
   create(@Body() dto: CreateEventDto) {
     return this.client.send('event.create', dto).pipe(timeout(5000));

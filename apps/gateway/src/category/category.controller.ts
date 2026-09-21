@@ -12,7 +12,7 @@ export class CategoryController {
   constructor(@Inject('EVENT_SERVICE') private readonly client: ClientProxy) {}
 
   @Post()
-  @Roles('ADMIN', 'ORGANIZER')
+  @Roles('admin', 'facilitator')
   @UseGuards(AccessTokenGuard, RolesGuard)
   create(@Body() dto: CreateCategoryDto) {
     return this.client.send('category.create', dto).pipe(timeout(5000));
