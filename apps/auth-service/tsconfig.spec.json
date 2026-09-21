@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Jest runs on a CommonJS runtime, so tests are compiled to CommonJS even
+    // though the build target is NodeNext. `allowJs` is needed because
+    // @nestjs/jwt v12 is ESM-only and has to be transpiled on the way in.
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolvePackageJsonExports": false,
+    "allowJs": true
+  }
+}

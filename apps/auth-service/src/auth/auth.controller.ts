@@ -20,7 +20,6 @@ export class AuthController {
 
 @MessagePattern('auth.login')
 async login(@Payload() data: LoginDto) {
-    console.log('Login DTO:', data);
     return this.authService.login(data);
 }
 

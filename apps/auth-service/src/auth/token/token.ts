@@ -1,11 +1,18 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'node:crypto';
 
 export interface TokenPayload {
   sub: string;
   email: string;
   role: string;
   type: 'access' | 'refresh';
+  /**
+   * Unique per issued token. Without it, two tokens minted for the same
+   * user in the same second are byte-identical, and storing the second
+   * one violates the unique index on refresh_tokens.tokenHash.
+   */
+  jti: string;
 }
 
 @Injectable()
@@ -24,6 +31,7 @@ export class TokenService {
       email: user.email,
       role: user.role,
       type: 'access',
+      jti: randomUUID(),
     };
 
     return this.jwtService.signAsync(payload, {
@@ -41,6 +49,7 @@ export class TokenService {
       email: user.email,
       role: user.role,
       type: 'refresh',
+      jti: randomUUID(),
     };
 
     return this.jwtService.signAsync(payload, {

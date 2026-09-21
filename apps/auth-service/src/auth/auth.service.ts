@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register-dto';
 import { LoginDto } from './dto/dto.login';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { LogoutDto } from './dto/logout.dto';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
 import { TokenService } from './token/token';
 import { RpcException } from '@nestjs/microservices';
 import { createHash } from 'node:crypto';
@@ -26,7 +25,6 @@ export class AuthService {
         where: { email: data.email },
     });
     if (existingUser) {
-        console.log('Email already exists:', data.email); // Log the existing email for debugging
         await this.writeAuditLog({
           userId: existingUser.id,
           action: 'REGISTER_FAILED',
@@ -39,11 +37,23 @@ export class AuthService {
         });
     }
 
+    // `passwordHash` is the deprecated alias for `password`; both carry the
+    // plaintext password. The DTO guarantees one of them is present.
+    const plainPassword = data.password ?? data.passwordHash;
+
+    if (!plainPassword) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'password is required',
+        error: 'Bad Request',
+      });
+    }
+
     // Create a new user
     const newUser = await this.prisma.user.create({
         data: {
             email: data.email,
-            passwordHash: await this.hashPassword(data.passwordHash), // Hash the password before storing
+            passwordHash: await this.hashPassword(plainPassword),
             firstName: data.firstName,
             lastName: data.lastName,
             affiliation: data.affiliation,
@@ -361,7 +371,24 @@ private async writeAuditLog(input: {
 
 // Find All
 async findAll() {
-    return this.prisma.user.findMany();
+    // Explicit select: never leak passwordHash to callers.
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        affiliation: true,
+        country: true,
+        phone: true,
+        role: true,
+        emailVerified: true,
+        isActive: true,
+        lastLoginAt: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
 }
 
 async hashPassword(password: string): Promise<string> {
